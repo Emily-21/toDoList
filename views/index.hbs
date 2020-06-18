@@ -1,5 +1,9 @@
+
 <h1>To Do List</h1>
 
+<div class="flex-container">
+    <div class="box">
+        <h2>Add a To-Do!</h2>
 <form action="/" method="POST">
 
 <label for="title">Title:</label>
@@ -8,9 +12,17 @@
 <label for="message">Details:</label>
 <input type="text" placeholder="Add details" name="details">
 <br><br>
-<input type="submit" value="Add item to To-Do List"/>
-</form>
+<input type="submit" value="Add item!"/>
+</form></div>
 
+{{log toDoItems}}
+<p>{{#each toDoItems}}
+  <div class="box">
+      <h2>{{this.title}}</h2>
+  <p> {{this.details}}</p> 
+  <button>X</button>
+    </div>
+    {{/each}}
+</p>
 
-
-
+</div>

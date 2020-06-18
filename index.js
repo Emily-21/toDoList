@@ -7,7 +7,7 @@ require('dotenv').config();
 const path = require('path');
 
 
-const ToDoList = require('./models/userModel')
+const ToDoList = require('./models/toDoModel')
 
 mongoose.connect(`${process.env.DATABASE_URL}`,{useNewUrlParser: true, useUnifiedTopology: true});
 
@@ -22,18 +22,30 @@ app.engine('.hbs', hbs({
 
 app.set('view engine', '.hbs')
 
-app.get('/', (req,res) => {
-    res.render('index')
+app.get('/', async (req,res) => {
+    let toDoItems = await ToDoList.find({})
+
+    toDoItems = toDoItems.map((item) => {
+       return item.toObject()
+    });
+
+  // items = items.map(item => item.toObject());
+
+    res.render('index', {toDoItems})
 })
 
 app.post('/', async (req, res) => {
-const item = new ToDoList({
-    title: req.body.title,
-    details: req.body.details,
-});
-await item.save() 
-res.render('index', {item})
-})
+    const item = new ToDoList({
+        title: req.body.title,
+        details: req.body.details,
+    });
+    await item.save().catch(()=>{
+        res.render('index', {err: "error"})
+        return;
+    });
+
+    res.redirect('/');
+}) 
 
 
 
